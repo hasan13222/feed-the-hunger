@@ -1,0 +1,5 @@
+.notFound{
+    background: url('../../assets/images/404.png') no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
