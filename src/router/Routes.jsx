@@ -38,7 +38,7 @@ const SiteRoutes = () => {
               }
             />
             <Route
-              path="/food/edit"
+              path="/editFood/:id"
               element={
                 <PrivateRoute>
                   <EditFood />

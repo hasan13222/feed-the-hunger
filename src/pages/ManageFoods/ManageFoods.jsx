@@ -138,7 +138,7 @@ function ManageFoods() {
                       return (
                         <>
                           <td className="border border-gray-200 py-3 px-6">
-                            <Link className="text-emerald-400 font-semibold">
+                            <Link to={`../editFood/${item._id}`} className="text-emerald-400 font-semibold">
                               Edit
                             </Link>
                           </td>
