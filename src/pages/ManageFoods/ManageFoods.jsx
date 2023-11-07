@@ -1,27 +1,33 @@
-import fakeData from "../../../public/foods.json";
-import * as React from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTable } from "react-table";
+import { AuthContext } from "../../contexts/AuthProvider";
 
 function ManageFoods() {
-  const data = React.useMemo(() => fakeData, []);
-  const columns = React.useMemo(
+  const {user} = useContext(AuthContext);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/myFoods?userEmail=${user?.email}`)
+    .then((res) => res.json())
+    .then(result => {
+      setData(result);
+    });
+  }, [])
+
+  const columns = useMemo(
     () => [
       {
-        Header: "ID",
-        accessor: "id",
+        Header: "Food Image",
+        accessor: "foodImage",
       },
       {
         Header: "Food Name",
-        accessor: "food_name",
-      },
-      {
-        Header: "Donator Name",
-        accessor: "donator_name",
+        accessor: "foodName",
       },
       {
         Header: "Food Qty",
-        accessor: "food_qty",
+        accessor: "foodQty",
       },
     ],
     []
@@ -54,9 +60,18 @@ function ManageFoods() {
               prepareRow(row);
               return (
                 <tr key={index} {...row.getRowProps()}>
-                  {row.cells.map((cell, index) => (
-                    <td className="border border-gray-200 py-3 px-6" key={index} {...cell.getCellProps()}> {cell.render("Cell")} </td>
-                  ))}
+                  {row.cells.map((cell, index) => {
+                    if(index === 0){
+                      const srcStr = cell.render("Cell");
+                      return (
+                        <td className="border border-gray-200 py-3 px-6" key={index} {...cell.getCellProps()}> <img className="w-20 h-20 object-contain" src={srcStr.props.value} alt="food image" /> </td>
+                      )
+                    }else{
+                      return (
+                        <td className="border border-gray-200 py-3 px-6" key={index} {...cell.getCellProps()}> {cell.render("Cell")} </td>
+                      )
+                    }
+                  })}
                   <td className="border border-gray-200 py-3 px-6"><Link className="text-emerald-400 font-semibold">Edit</Link></td>
                   <td className="border border-gray-200 py-3 px-6"><Link className="text-emerald-400 font-semibold">Delete</Link></td>
                   <td className="border border-gray-200 py-3 px-6"><Link className="text-emerald-400 font-semibold">Manage</Link></td>

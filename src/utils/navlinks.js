@@ -12,7 +12,16 @@ export const navlinks = [
         path: '/add-food',
     },
     {
-        title: 'Manage Foods',
+        title: 'Manage My Foods',
         path: '/manage-foods',
-    }
+    },
+    {
+        title: 'My Food Requests',
+        path: '/request-foods',
+    },
+    {
+        title: 'Signup',
+        path: '/signup',
+    },
+
 ]

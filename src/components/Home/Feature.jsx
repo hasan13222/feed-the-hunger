@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import FoodItem from "../Shared/FoodItem";
+import { Link } from "react-router-dom";
 const Feature = () => {
   const [feturedFoods, setFeaturedFood] = useState([]);
 
   useEffect(() => {
-    fetch("foods.json")
+    fetch("http://localhost:5000/featuredFoods")
       .then((res) => res.json())
       .then((data) => setFeaturedFood(data));
   }, []);
@@ -23,6 +24,9 @@ const Feature = () => {
                 <FoodItem food={food} />
               </>
             ))}
+          </div>
+          <div className="text-center">
+            <Link className="btn" to={'/foods'}>Show All</Link>
           </div>
         </div>
       </div>
