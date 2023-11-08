@@ -6,6 +6,7 @@ import app from "../../firebase/firebase.config";
 import { AuthContext } from "../../contexts/AuthProvider";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Helmet } from "react-helmet";
 
 const Signup = () => {
   const [signupError, setSignupError] = useState("");
@@ -24,29 +25,32 @@ const Signup = () => {
     const userPhoto = e.target.photo_url.value;
 
     handleSignUp(email, password)
-    .then( () => {
-        setSignupError('');
+      .then(() => {
+        setSignupError("");
         notify();
 
         updateProfile(auth.currentUser, {
           displayName: userName,
-          photoURL: userPhoto
+          photoURL: userPhoto,
         })
-        .then( (updateUser) => {
+          .then((updateUser) => {
             // profile is updated
             console.log(updateUser);
-        })
-        .catch((error) => {
+          })
+          .catch((error) => {
             console.log(error);
-        })
-    })
-    .catch((error) => {
+          });
+      })
+      .catch((error) => {
         setSignupError(error.message);
-    })
-  }
+      });
+  };
 
   return (
     <>
+      <Helmet>
+        <title>FeedTheHunger | Signup</title>
+      </Helmet>
       <div className="signup">
         <div className="container mx-auto px-20">
           <h2 className="text-3xl font-bold">Sign Up</h2>

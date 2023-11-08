@@ -1,5 +1,6 @@
 // import fakeData from "../../../public/foods.json";
 import { useEffect, useMemo, useState } from "react";
+import { Helmet } from "react-helmet";
 import { useParams } from "react-router-dom";
 import { useTable } from "react-table";
 import { ToastContainer, toast } from "react-toastify";
@@ -36,12 +37,12 @@ const ManageSingleFood = () => {
           fetch(`http://localhost:5000/editFood/${foodId}`, {
             method: "PATCH",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({foodStatus: 'delivered'}),
+            body: JSON.stringify({ foodStatus: "delivered" }),
           })
             .then((response) => response.json())
             .then((data) => {
               if (data) {
-                console.log('status changed');
+                console.log("status changed");
               }
             })
             .catch((err) => {
@@ -86,6 +87,9 @@ const ManageSingleFood = () => {
     useTable({ columns, data });
   return (
     <>
+      <Helmet>
+        <title>FeedTheHunger | Manage Food Request</title>
+      </Helmet>
       <div className="bg-emerald-50 py-7">
         <div className="container mx-auto">
           {data.length > 0 && (
@@ -172,7 +176,9 @@ const ManageSingleFood = () => {
                                 {item?.status}
                                 {item?.status === "pending" && (
                                   <button
-                                    onClick={() => handleDeliver(item._id, item.foodId)}
+                                    onClick={() =>
+                                      handleDeliver(item._id, item.foodId)
+                                    }
                                     className="text-emerald-400 font-semibold underline pl-1"
                                   >
                                     Deliver

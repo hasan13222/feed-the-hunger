@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider";
 import { ToastContainer, toast } from "react-toastify";
+import { Helmet } from "react-helmet";
 
 const SingleFood = () => {
   const [food, setFood] = useState({});
@@ -118,6 +119,9 @@ const SingleFood = () => {
 
   return (
     <>
+    <Helmet>
+        <title>FeedTheHunger | Food Details</title>
+      </Helmet>
       <div className="container mx-auto">
         <div className="p-8 mb-6 flex mx-auto gap-6 bg-green-200 my-10 w-max">
           <img

@@ -4,6 +4,7 @@ import "./Login.css";
 import { AuthContext } from "../../contexts/AuthProvider";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet";
 
 const Login = () => {
   const [loginError, setLoginError] = useState("");
@@ -33,18 +34,22 @@ const Login = () => {
 
   const handleGoogleSubmit = () => {
     handleGoogleSignIn()
-    .then(() => {
-      setGoogleLoginError('');
+      .then(() => {
+        setGoogleLoginError("");
         notify();
         navigate(`${location?.state ? location?.state : "/"}`);
-    }).catch((error) => {
-      const errorMessage = error.message;
-      setGoogleLoginError(errorMessage);
-    });
-  }
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        setGoogleLoginError(errorMessage);
+      });
+  };
 
   return (
     <>
+      <Helmet>
+        <title>FeedTheHunger | Login</title>
+      </Helmet>
       <div className="login">
         <div className="container mx-auto px-20">
           <h2 className="text-3xl font-bold">Login</h2>

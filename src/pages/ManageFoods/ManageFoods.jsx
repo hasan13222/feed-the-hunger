@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTable } from "react-table";
 import { AuthContext } from "../../contexts/AuthProvider";
 import Swal from "sweetalert2";
+import { Helmet } from "react-helmet";
 
 function ManageFoods() {
   const { user } = useContext(AuthContext);
@@ -71,6 +72,9 @@ function ManageFoods() {
 
   return (
     <>
+      <Helmet>
+        <title>FeedTheHunger | Manage Foods</title>
+      </Helmet>
       <div className="container mx-auto py-7">
         <h2 className="text-3xl font-bold text-center mb-5">
           Manage Your Foods
@@ -138,7 +142,10 @@ function ManageFoods() {
                       return (
                         <>
                           <td className="border border-gray-200 py-3 px-6">
-                            <Link to={`../editFood/${item._id}`} className="text-emerald-400 font-semibold">
+                            <Link
+                              to={`../editFood/${item._id}`}
+                              className="text-emerald-400 font-semibold"
+                            >
                               Edit
                             </Link>
                           </td>
@@ -151,7 +158,10 @@ function ManageFoods() {
                             </button>
                           </td>
                           <td className="border border-gray-200 py-3 px-6">
-                            <Link to={`../manage/${item._id}`} className="text-emerald-400 font-semibold">
+                            <Link
+                              to={`../manage/${item._id}`}
+                              className="text-emerald-400 font-semibold"
+                            >
                               Manage
                             </Link>
                           </td>

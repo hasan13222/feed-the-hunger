@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import './AddFood.css'
 import { AuthContext } from '../../contexts/AuthProvider';
 import { ToastContainer, toast } from 'react-toastify';
+import { Helmet } from 'react-helmet';
 
 const AddFood = () => {
   const {user} = useContext(AuthContext);
@@ -49,6 +50,9 @@ const AddFood = () => {
 
   return (
     <>
+    <Helmet>
+        <title>FeedTheHunger | Add Food</title>
+      </Helmet>
       <div className="addFood py-10">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold mb-6">Add Your Surplus food to feed the hunger</h2>
