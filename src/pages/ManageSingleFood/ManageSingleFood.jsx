@@ -1,27 +1,68 @@
-import fakeData from "../../../public/foods.json";
-import * as React from "react";
-import { Link } from "react-router-dom";
+// import fakeData from "../../../public/foods.json";
+import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useTable } from "react-table";
+import { ToastContainer, toast } from "react-toastify";
 
 const ManageSingleFood = () => {
-    const data = React.useMemo(() => fakeData, []);
-  const columns = React.useMemo(
+  const [data, setData] = useState([]);
+  const [loadData, setLoadData] = useState(false);
+
+  const { id } = useParams();
+  const notify = () => toast("food delivered successfully");
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/manage/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setData(data);
+        setLoadData(false);
+      })
+      .catch((error) => console.log(error.message));
+  }, [loadData]);
+
+  const handleDeliver = (idToChange) => {
+    const changedData = {
+      status: "delivered",
+    };
+    fetch(`http://localhost:5000/foodStatus/${idToChange}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(changedData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          notify();
+          setLoadData(true);
+        }
+      });
+  };
+  const columns = useMemo(
     () => [
       {
-        Header: "ID",
-        accessor: "id",
-      },
-      {
         Header: "Food Name",
-        accessor: "food_name",
+        accessor: "foodName",
       },
       {
-        Header: "Donator Name",
-        accessor: "donator_name",
+        Header: "Food Image",
+        accessor: "foodImage",
       },
       {
-        Header: "Food Qty",
-        accessor: "food_qty",
+        Header: "Requester Name",
+        accessor: "reqName",
+      },
+      {
+        Header: "Requester Image",
+        accessor: "reqImage",
+      },
+      {
+        Header: "Requester Email",
+        accessor: "reqEmail",
+      },
+      {
+        Header: "Request Time and Date",
+        accessor: "reqDate",
       },
     ],
     []
@@ -31,40 +72,114 @@ const ManageSingleFood = () => {
     useTable({ columns, data });
   return (
     <>
-        <div className="bg-emerald-50 py-7">
-            <div className="container mx-auto">
-                <h2 className="text-3xl font-bold text-center mb-5">Check Your Food Status</h2>
-                <table className="mx-auto border border-gray-200" {...getTableProps()}>
-          <thead>
-            {headerGroups.map((headerGroup, index) => (
-              <tr className="border border-gray-200" key={index} {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column, index) => (
-                  <th className="border border-gray-200 py-3 px-6" key={index} {...column.getHeaderProps()}>
-                    {column.render("Header")}
-                  </th>
+      <div className="bg-emerald-50 py-7">
+        <div className="container mx-auto">
+          {data.length > 0 && (
+            <h2 className="text-3xl font-bold text-center mb-5">
+              Check Your Food Status
+            </h2>
+          )}
+          {data.length === 0 && (
+            <h2 className="text-3xl font-bold text-center mb-5">
+              No Request for this food
+            </h2>
+          )}
+          {data.length > 0 && (
+            <table
+              className="mx-auto border border-gray-200"
+              {...getTableProps()}
+            >
+              <thead>
+                {headerGroups.map((headerGroup, index) => (
+                  <tr
+                    className="border border-gray-200"
+                    key={index}
+                    {...headerGroup.getHeaderGroupProps()}
+                  >
+                    {headerGroup.headers.map((column, index) => (
+                      <th
+                        className="border border-gray-200 py-3 px-6"
+                        key={index}
+                        {...column.getHeaderProps()}
+                      >
+                        {column.render("Header")}
+                      </th>
+                    ))}
+                    <th className="border border-gray-200 py-3 px-6">Status</th>
+                  </tr>
                 ))}
-                <th className="border border-gray-200 py-3 px-6">Status</th>
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row, index) => {
-              prepareRow(row);
-              return (
-                <tr key={index} {...row.getRowProps()}>
-                  {row.cells.map((cell, index) => (
-                    <td className="border border-gray-200 py-3 px-6" key={index} {...cell.getCellProps()}> {cell.render("Cell")} </td>
-                  ))}
-                  <td className="border border-gray-200 py-3 px-6">Pending <Link className="text-emerald-400 underline">Deliver</Link></td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-            </div>
+              </thead>
+              <tbody {...getTableBodyProps()}>
+                {rows.map((row, rowIndex) => {
+                  prepareRow(row);
+                  return (
+                    <tr key={rowIndex} {...row.getRowProps()}>
+                      {row.cells.map((cell, cellIndex) => {
+                        const srcStr = cell.render("Cell");
+                        const srcVal = srcStr.props.value;
+                        if (
+                          srcVal.includes(".png") ||
+                          srcVal.includes(".svg") ||
+                          srcVal.includes(".jpg") ||
+                          srcVal.includes(".jpeg")
+                        ) {
+                          return (
+                            <>
+                              <td
+                                className="border border-gray-200 py-3 px-6"
+                                key={cellIndex}
+                                {...cell.getCellProps()}
+                              >
+                                <img
+                                  className="w-20 h-20 object-contain"
+                                  src={srcVal}
+                                  alt="image"
+                                />
+                              </td>
+                            </>
+                          );
+                        } else {
+                          return (
+                            <td
+                              className="border border-gray-200 py-3 px-6"
+                              key={cellIndex}
+                              {...cell.getCellProps()}
+                            >
+                              {cell.render("Cell")}
+                            </td>
+                          );
+                        }
+                      })}
+                      {data?.map((item, index) => {
+                        if (index === rowIndex) {
+                          return (
+                            <>
+                              <td className="border border-gray-200 py-3 px-6">
+                                {item?.status}
+                                {item?.status === "available" && (
+                                  <button
+                                    onClick={() => handleDeliver(item._id)}
+                                    className="text-emerald-400 font-semibold underline pl-1"
+                                  >
+                                    Deliver
+                                  </button>
+                                )}
+                              </td>
+                            </>
+                          );
+                        }
+                      })}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </div>
+      </div>
+      <ToastContainer />
     </>
-  )
-}
+  );
+};
 
-export default ManageSingleFood
+export default ManageSingleFood;

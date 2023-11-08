@@ -54,7 +54,7 @@ const SiteRoutes = () => {
               }
             />
             <Route
-              path="/manage-foods/1"
+              path="/manage/:id"
               element={
                 <PrivateRoute>
                   <ManageSingleFood />

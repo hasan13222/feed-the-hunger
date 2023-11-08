@@ -40,11 +40,14 @@ const SingleFood = () => {
       donationMoney,
       donorEmail: food?.donorEmail,
       donorName: food?.donorName,
-      userEmail: user?.email,
+      reqName: user?.displayName,
+      reqEmail: user?.email,
+      reqImage: user?.photoURL,
       reqDate: currentDateFormatted,
       notes,
       pickup: food?.pickup,
-      expTime: food?.expTime
+      expTime: food?.expTime,
+      foodStatus: 'available'
     }
 
     fetch('http://localhost:5000/requestFood', {
