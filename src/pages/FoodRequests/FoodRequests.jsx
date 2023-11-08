@@ -1,28 +1,72 @@
-import fakeData from "../../../public/foods.json";
-import * as React from "react";
-import { Link } from "react-router-dom";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useTable } from "react-table";
+import { AuthContext } from "../../contexts/AuthProvider";
+import { ToastContainer, toast } from "react-toastify";
 
 function FoodRequests() {
-  const data = React.useMemo(() => fakeData, []);
-  const columns = React.useMemo(
+  const [data, setData] = useState([]);
+  const [loadData, setLoadData] = useState(false);
+  const {user} = useContext(AuthContext);
+
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/myRequests?userEmail=${user?.email}`)
+      .then((res) => res.json())
+      .then((result) => {
+        setData(result);
+        setLoadData(false);
+      });
+  }, [loadData]);
+
+  const handleCancel = (idToChange, foodId) => {
+    fetch(`http://localhost:5000/cancelRequest/${idToChange}`, {
+      method: "DELETE"
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          fetch(`http://localhost:5000/editFood/${foodId}`, {
+            method: "PATCH",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({foodStatus: 'available'}),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data) {
+                console.log('status changed');
+              }
+            })
+            .catch((err) => {
+              console.log(err.message);
+            });
+          toast("Your request has been cancelled");
+          setLoadData(true);
+        }
+      });
+  };
+
+  const columns = useMemo(
     () => [
       {
-        Header: "ID",
-        accessor: "id",
+        Header: "Food Name",
+        accessor: "foodName",
       },
       {
-        Header: "Donator Name",
-        accessor: "donator_name",
+        Header: "Donar Name",
+        accessor: "donorName",
       },
       {
         Header: "Pickup Location",
-        accessor: "pickup_location",
+        accessor: "pickup",
       },
       {
         Header: "Expire Time",
-        accessor: "exp_time",
+        accessor: "expTime",
       },
+      {
+        Header: "Request Date",
+        accessor: "reqDate",
+      }
     ],
     []
   );
@@ -44,26 +88,43 @@ function FoodRequests() {
                   </th>
                 ))}
                 <th className="border border-gray-200 py-3 px-6">Status</th>
-                <th className="border border-gray-200 py-3 px-6">Calcel</th>
               </tr>
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row, index) => {
+            {rows.map((row, rowIndex) => {
               prepareRow(row);
               return (
-                <tr key={index} {...row.getRowProps()}>
-                  {row.cells.map((cell, index) => (
-                    <td className="border border-gray-200 py-3 px-6" key={index} {...cell.getCellProps()}> {cell.render("Cell")} </td>
+                <tr key={rowIndex} {...row.getRowProps()}>
+                  {row.cells.map((cell, cellIndex) => (
+                    <td className="border border-gray-200 py-3 px-6" key={cellIndex} {...cell.getCellProps()}> {cell.render("Cell")} </td>
                   ))}
-                  <td className="border border-gray-200 py-3 px-6">Available</td>
-                  <td className="border border-gray-200 py-3 px-6"><Link className="text-emerald-400 font-semibold">Cancel</Link></td>
+                  {data?.map((item, index) => {
+                        if (index === rowIndex) {
+                          return (
+                            <>
+                              <td className="border border-gray-200 py-3 px-6">
+                                {item?.status}
+                                {item?.status === "pending" && (
+                                  <button
+                                    onClick={() => handleCancel(item._id, item.foodId)}
+                                    className="text-emerald-400 font-semibold underline pl-1"
+                                  >
+                                    Cancel
+                                  </button>
+                                )}
+                              </td>
+                            </>
+                          );
+                        }
+                      })}
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
+      <ToastContainer/>
     </>
   );
 }

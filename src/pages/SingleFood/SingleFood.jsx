@@ -44,11 +44,11 @@ const SingleFood = () => {
   const handleRequestFood = (e) => {
     e.preventDefault();
 
-    if(food?.foodStatus !== 'available'){
+    if (food?.foodStatus !== "available") {
       toast("Food is not available");
       return;
     }
-    
+
     const notes = e.target.notes.value;
     const donationMoney = e.target.donationMoney.value;
 
@@ -80,12 +80,16 @@ const SingleFood = () => {
           fetch(`http://localhost:5000/editFood/${foodId}`, {
             method: "PATCH",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({foodStatus: 'pending'}),
+            body: JSON.stringify({ foodStatus: "pending" }),
           })
             .then((response) => response.json())
             .then((data) => {
               if (data) {
-                console.log('status changed');
+                fetch(`http://localhost:5000/foods/${foodId}`)
+                  .then((res) => res.json())
+                  .then((data) => {
+                    setFood(data);
+                  });
               }
             })
             .catch((err) => {
