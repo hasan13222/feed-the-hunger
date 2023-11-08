@@ -29,7 +29,7 @@ const EditFood = () => {
       notes,
     };
 
-    fetch(`https://feed-the-hunger-server-7dk4ehmpc-jamil-hasans-projects.vercel.app/editFood/${id}`, {
+    fetch(`https://feed-the-hunger-server.vercel.app/editFood/${id}`, {
       method: "PATCH",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(updatedFood),
@@ -46,7 +46,7 @@ const EditFood = () => {
   };
 
   useEffect(() => {
-    fetch(`https://feed-the-hunger-server-7dk4ehmpc-jamil-hasans-projects.vercel.app/foods/${id}`)
+    fetch(`https://feed-the-hunger-server.vercel.app/foods/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setFood(data);

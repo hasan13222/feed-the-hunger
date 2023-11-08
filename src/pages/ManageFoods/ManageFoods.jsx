@@ -20,7 +20,7 @@ function ManageFoods() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`https://feed-the-hunger-server-7dk4ehmpc-jamil-hasans-projects.vercel.app/foodDelete/${idTobeDeleted}`, {
+        fetch(`https://feed-the-hunger-server.vercel.app/foodDelete/${idTobeDeleted}`, {
           method: "DELETE",
         })
           .then((res) => res.json())
@@ -42,7 +42,7 @@ function ManageFoods() {
   };
 
   useEffect(() => {
-    fetch(`https://feed-the-hunger-server-7dk4ehmpc-jamil-hasans-projects.vercel.app/myFoods?userEmail=${user?.email}`)
+    fetch(`https://feed-the-hunger-server.vercel.app/myFoods?userEmail=${user?.email}`)
       .then((res) => res.json())
       .then((result) => {
         setData(result);

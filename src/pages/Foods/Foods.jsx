@@ -40,7 +40,7 @@ const Foods = () => {
   };
 
   useEffect(() => {
-    fetch("https://feed-the-hunger-server-7dk4ehmpc-jamil-hasans-projects.vercel.app/foods")
+    fetch("https://feed-the-hunger-server.vercel.app/foods")
       .then((res) => res.json())
       .then((data) => {
         setAvailableFood(data);

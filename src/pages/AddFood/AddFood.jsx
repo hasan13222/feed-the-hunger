@@ -32,7 +32,7 @@ const AddFood = () => {
       foodStatus: "available"
     }
 
-    fetch('https://feed-the-hunger-server-7dk4ehmpc-jamil-hasans-projects.vercel.app/addFood', {
+    fetch('https://feed-the-hunger-server.vercel.app/addFood', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(newFood),

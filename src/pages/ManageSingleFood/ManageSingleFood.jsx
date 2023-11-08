@@ -13,7 +13,7 @@ const ManageSingleFood = () => {
   const notify = () => toast("food delivered successfully");
 
   useEffect(() => {
-    fetch(`https://feed-the-hunger-server-7dk4ehmpc-jamil-hasans-projects.vercel.app/manage/${id}`)
+    fetch(`https://feed-the-hunger-server.vercel.app/manage/${id}`)
       .then((response) => response.json())
       .then((data) => {
         setData(data);
@@ -26,7 +26,7 @@ const ManageSingleFood = () => {
     const changedData = {
       status: "delivered",
     };
-    fetch(`https://feed-the-hunger-server-7dk4ehmpc-jamil-hasans-projects.vercel.app/foodStatus/${idToChange}`, {
+    fetch(`https://feed-the-hunger-server.vercel.app/foodStatus/${idToChange}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(changedData),
@@ -34,7 +34,7 @@ const ManageSingleFood = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data) {
-          fetch(`https://feed-the-hunger-server-7dk4ehmpc-jamil-hasans-projects.vercel.app/editFood/${foodId}`, {
+          fetch(`https://feed-the-hunger-server.vercel.app/editFood/${foodId}`, {
             method: "PATCH",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({ foodStatus: "delivered" }),
