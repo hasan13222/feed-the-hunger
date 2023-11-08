@@ -19,9 +19,5 @@ export const navlinks = [
         title: 'My Food Requests',
         path: '/request-foods',
     },
-    {
-        title: 'Signup',
-        path: '/signup',
-    },
 
 ]

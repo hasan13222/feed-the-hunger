@@ -43,10 +43,11 @@ const Navbar = () => {
                 </li>
               </>
             ))}
-            <li>{!user && <NavLink className="font-bold hover:text-green-500" to={"/login"}>Login</NavLink>}</li>
-            <li>{user && <img className="w-10 h-10 object-contain" src={user?.photoURL} alt="profile" />}</li>
-            <li>{user && <span>{user?.displayName}</span>}</li>
-            <li>{user && <button onClick={handleLogout}>Logout</button>}</li>
+            {!user && <li><NavLink className="font-bold hover:text-green-500" to={"/signup"}>Signup</NavLink></li>}
+            {!user && <li><NavLink className="font-bold hover:text-green-500" to={"/login"}>Login</NavLink></li>}
+            {user && <li><img className="w-10 h-10 object-contain" src={user?.photoURL} alt="profile" /></li>}
+            {user && <li><span>{user?.displayName}</span></li>}
+            {user && <li><button onClick={handleLogout}>Logout</button></li>}
           </ul>
         </div>
       </div>
