@@ -10,7 +10,7 @@ function FoodRequests() {
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/myRequests?userEmail=${user?.email}`)
+    fetch(`https://feed-the-hunger-server-7dk4ehmpc-jamil-hasans-projects.vercel.app/myRequests?userEmail=${user?.email}`)
       .then((res) => res.json())
       .then((result) => {
         setData(result);
@@ -19,13 +19,13 @@ function FoodRequests() {
   }, [loadData]);
 
   const handleCancel = (idToChange, foodId) => {
-    fetch(`http://localhost:5000/cancelRequest/${idToChange}`, {
+    fetch(`https://feed-the-hunger-server-7dk4ehmpc-jamil-hasans-projects.vercel.app/cancelRequest/${idToChange}`, {
       method: "DELETE",
     })
       .then((res) => res.json())
       .then((data) => {
         if (data) {
-          fetch(`http://localhost:5000/editFood/${foodId}`, {
+          fetch(`https://feed-the-hunger-server-7dk4ehmpc-jamil-hasans-projects.vercel.app/editFood/${foodId}`, {
             method: "PATCH",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({ foodStatus: "available" }),

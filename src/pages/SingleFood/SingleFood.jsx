@@ -75,7 +75,7 @@ const SingleFood = () => {
       status: "pending",
     };
 
-    fetch("http://localhost:5000/requestFood", {
+    fetch("https://feed-the-hunger-server-7dk4ehmpc-jamil-hasans-projects.vercel.app/requestFood", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(requestedFood),
@@ -83,7 +83,7 @@ const SingleFood = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data) {
-          fetch(`http://localhost:5000/editFood/${foodId}`, {
+          fetch(`https://feed-the-hunger-server-7dk4ehmpc-jamil-hasans-projects.vercel.app/editFood/${foodId}`, {
             method: "PATCH",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({ foodStatus: "pending" }),
@@ -91,7 +91,7 @@ const SingleFood = () => {
             .then((response) => response.json())
             .then((data) => {
               if (data) {
-                fetch(`http://localhost:5000/foods/${foodId}`)
+                fetch(`https://feed-the-hunger-server-7dk4ehmpc-jamil-hasans-projects.vercel.app/foods/${foodId}`)
                   .then((res) => res.json())
                   .then((data) => {
                     setFood(data);
@@ -110,7 +110,7 @@ const SingleFood = () => {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:5000/foods/${foodId}`)
+    fetch(`https://feed-the-hunger-server-7dk4ehmpc-jamil-hasans-projects.vercel.app/foods/${foodId}`)
       .then((res) => res.json())
       .then((data) => {
         setFood(data);
