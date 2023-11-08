@@ -36,7 +36,7 @@ const Login = () => {
     handleGoogleSignIn()
       .then(() => {
         setGoogleLoginError("");
-        notify();
+        notify();        
         navigate(`${location?.state ? location?.state : "/"}`);
       })
       .catch((error) => {

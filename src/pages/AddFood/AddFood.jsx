@@ -35,7 +35,7 @@ const AddFood = () => {
     fetch('http://localhost:5000/addFood', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(newFood)
+      body: JSON.stringify(newFood),
     })
     .then(response => response.json())
     .then(data => {
