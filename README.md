@@ -1,8 +1,10 @@
-# React + Vite
+# Electrons Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## [Live Link](https://feedthehunger-d390c.web.app)
+## Fetures of the Site
+  - User can share their surplus food with others
+  - Those who need food can request for the available food
+  - User can add, edit and remove their food
+  - Requester can cancel their request until delivered
+  - Requester can see their requested food
+  - Donor can change status of their food
