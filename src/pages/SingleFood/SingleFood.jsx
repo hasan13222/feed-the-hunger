@@ -44,6 +44,11 @@ const SingleFood = () => {
   const handleRequestFood = (e) => {
     e.preventDefault();
 
+    if(user?.email === food?.donorEmail){
+      toast("You can not request your food");
+      return;
+    }
+
     if (food?.foodStatus !== "available") {
       toast("Food is not available");
       return;
