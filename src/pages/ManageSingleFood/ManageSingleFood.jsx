@@ -21,7 +21,7 @@ const ManageSingleFood = () => {
       .catch((error) => console.log(error.message));
   }, [loadData]);
 
-  const handleDeliver = (idToChange) => {
+  const handleDeliver = (idToChange, foodId) => {
     const changedData = {
       status: "delivered",
     };
@@ -33,6 +33,20 @@ const ManageSingleFood = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data) {
+          fetch(`http://localhost:5000/editFood/${foodId}`, {
+            method: "PATCH",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({foodStatus: 'delivered'}),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data) {
+                console.log('status changed');
+              }
+            })
+            .catch((err) => {
+              console.log(err.message);
+            });
           notify();
           setLoadData(true);
         }
@@ -156,9 +170,9 @@ const ManageSingleFood = () => {
                             <>
                               <td className="border border-gray-200 py-3 px-6">
                                 {item?.status}
-                                {item?.status === "available" && (
+                                {item?.status === "pending" && (
                                   <button
-                                    onClick={() => handleDeliver(item._id)}
+                                    onClick={() => handleDeliver(item._id, item.foodId)}
                                     className="text-emerald-400 font-semibold underline pl-1"
                                   >
                                     Deliver

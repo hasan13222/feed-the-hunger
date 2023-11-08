@@ -5,7 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 
 const SingleFood = () => {
   const [food, setFood] = useState({});
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   const { foodId } = useParams();
 
@@ -14,22 +14,41 @@ const SingleFood = () => {
   // get current time
   function getCurrentFormattedDate() {
     const now = new Date();
-  
-    const day = now.getDate().toString().padStart(2, '0');
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    const day = now.getDate().toString().padStart(2, "0");
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
     const month = monthNames[now.getMonth()];
     const year = now.getFullYear();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-  
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+
     const formattedDate = `${day} ${month}, ${year} ${hours}:${minutes}`;
     return formattedDate;
   }
-  
+
   const currentDateFormatted = getCurrentFormattedDate();
 
   const handleRequestFood = (e) => {
     e.preventDefault();
+
+    if(food?.foodStatus !== 'available'){
+      toast("Food is not available");
+      return;
+    }
+    
     const notes = e.target.notes.value;
     const donationMoney = e.target.donationMoney.value;
 
@@ -47,25 +66,39 @@ const SingleFood = () => {
       notes,
       pickup: food?.pickup,
       expTime: food?.expTime,
-      foodStatus: 'available'
-    }
+      status: "pending",
+    };
 
-    fetch('http://localhost:5000/requestFood', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(requestedFood)
+    fetch("http://localhost:5000/requestFood", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(requestedFood),
     })
-    .then(response => response.json())
-    .then(data => {
-      if(data){
-        notify();
-      }
-    })
-    .catch(err => {
-      console.log(err.message);
-    });
-  }
-  
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          fetch(`http://localhost:5000/editFood/${foodId}`, {
+            method: "PATCH",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({foodStatus: 'pending'}),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data) {
+                console.log('status changed');
+              }
+            })
+            .catch((err) => {
+              console.log(err.message);
+            });
+          notify();
+        }
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
   useEffect(() => {
     fetch(`http://localhost:5000/foods/${foodId}`)
       .then((res) => res.json())
@@ -127,7 +160,8 @@ const SingleFood = () => {
               <div className="all_inputs flex gap-4 flex-wrap">
                 <div className="single_input flex flex-col gap-2 w-[45%]">
                   <label htmlFor="foodId">Food Id</label>
-                  <input className="border-gray-300 border w-full rounded-sm p-2"
+                  <input
+                    className="border-gray-300 border w-full rounded-sm p-2"
                     type="text"
                     name="foodId"
                     readOnly
@@ -146,27 +180,40 @@ const SingleFood = () => {
                 </div>
                 <div className="single_input flex flex-col gap-2 w-[45%]">
                   <label htmlFor="foodName">Food Name</label>
-                  <input className="border-gray-300 border w-full rounded-sm p-2"
+                  <input
+                    className="border-gray-300 border w-full rounded-sm p-2"
                     type="text"
                     name="foodName"
                     readOnly
                     defaultValue={food?.foodName}
                   />
                 </div>
-                
+                <div className="single_input flex flex-col gap-2 w-[45%]">
+                  <label htmlFor="foodStatus">Food Status</label>
+                  <input
+                    className="border-gray-300 border w-full rounded-sm p-2"
+                    type="text"
+                    name="foodStatus"
+                    readOnly
+                    defaultValue={food?.foodStatus}
+                  />
+                </div>
+
                 <div className="single_input flex flex-col gap-2 w-[45%]">
                   <label htmlFor="donorName">Donator Name</label>
-                  <input className="border-gray-300 border w-full rounded-sm p-2"
+                  <input
+                    className="border-gray-300 border w-full rounded-sm p-2"
                     type="text"
                     name="donorName"
                     readOnly
                     defaultValue={food?.donorName}
                   />
                 </div>
-                
+
                 <div className="single_input flex flex-col gap-2 w-[45%]">
                   <label htmlFor="donorEmail">Donator Email</label>
-                  <input className="border-gray-300 border w-full rounded-sm p-2"
+                  <input
+                    className="border-gray-300 border w-full rounded-sm p-2"
                     type="text"
                     name="donorEmail"
                     readOnly
@@ -176,7 +223,8 @@ const SingleFood = () => {
 
                 <div className="single_input flex flex-col gap-2 w-[45%]">
                   <label htmlFor="userEmail">Your Email</label>
-                  <input className="border-gray-300 border w-full rounded-sm p-2"
+                  <input
+                    className="border-gray-300 border w-full rounded-sm p-2"
                     type="text"
                     name="userEmail"
                     readOnly
@@ -185,7 +233,8 @@ const SingleFood = () => {
                 </div>
                 <div className="single_input flex flex-col gap-2 w-[45%]">
                   <label htmlFor="reqDate">Request Date</label>
-                  <input className="border-gray-300 border w-full rounded-sm p-2"
+                  <input
+                    className="border-gray-300 border w-full rounded-sm p-2"
                     type="text"
                     name="reqDate"
                     readOnly
@@ -194,7 +243,8 @@ const SingleFood = () => {
                 </div>
                 <div className="single_input flex flex-col gap-2 w-[45%]">
                   <label htmlFor="pickup">Pickup Location</label>
-                  <input className="border-gray-300 border w-full rounded-sm p-2"
+                  <input
+                    className="border-gray-300 border w-full rounded-sm p-2"
                     type="text"
                     name="pickup"
                     readOnly
@@ -203,7 +253,8 @@ const SingleFood = () => {
                 </div>
                 <div className="single_input flex flex-col gap-2 w-[45%]">
                   <label htmlFor="expTime">Expire Time</label>
-                  <input className="border-gray-300 border w-full rounded-sm p-2"
+                  <input
+                    className="border-gray-300 border w-full rounded-sm p-2"
                     type="text"
                     name="expTime"
                     readOnly
@@ -212,21 +263,35 @@ const SingleFood = () => {
                 </div>
                 <div className="single_input flex flex-col gap-2 w-[45%]">
                   <label htmlFor="donationMoney">Donation Money</label>
-                  <input className="border-gray-300 border w-full rounded-sm p-2" type="text" name="donationMoney" />
+                  <input
+                    className="border-gray-300 border w-full rounded-sm p-2"
+                    type="text"
+                    name="donationMoney"
+                  />
                 </div>
-                
+
                 <div className="single_input flex flex-col gap-2 w-full">
                   <label htmlFor="notes">Additional notes</label>
-                  <textarea defaultValue="write your notes here" className="border-gray-300 border w-full rounded-sm p-2" name="notes" id="" cols="30" rows="3"></textarea>
+                  <textarea
+                    defaultValue="write your notes here"
+                    className="border-gray-300 border w-full rounded-sm p-2"
+                    name="notes"
+                    id=""
+                    cols="30"
+                    rows="3"
+                  ></textarea>
                 </div>
-                
               </div>
-              <input type="submit" value="Confirm" className="btn mt-3 bg-green-700 text-white" />
+              <input
+                type="submit"
+                value="Confirm"
+                className="btn mt-3 bg-green-700 text-white"
+              />
             </form>
           </div>
         </dialog>
       </div>
-      <ToastContainer/>
+      <ToastContainer />
     </>
   );
 };
